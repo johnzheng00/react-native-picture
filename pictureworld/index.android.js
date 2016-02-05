@@ -6,25 +6,26 @@
 import React, {
   AppRegistry,
   Component,
+  ToolbarAndroid,
   StyleSheet,
   Text,
   View
 } from 'react-native';
 
+var MainScreen = require('./MainScreen');
+
 class pictureworld extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Shake or press menu button for dev menu
-        </Text>
-      </View>
+      <View style={{flex: 1}}>
+      <ToolbarAndroid style={styles.toolbar}
+        actions={[]}
+        titleColor="white"
+        title="Movies" />
+      <MainScreen
+        style={{flex: 1}}
+      />
+    </View>
     );
   }
 }
@@ -32,9 +33,11 @@ class pictureworld extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+
+  },
+  toolbar: {
+    backgroundColor: '#03a9f4',
+    height: 56,
   },
   welcome: {
     fontSize: 20,
