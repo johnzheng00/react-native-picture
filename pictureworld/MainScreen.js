@@ -8,8 +8,11 @@ var {
   TouchableHighlight,
   StyleSheet,
   Text,
+  Platform,
   View,
 } = React;
+
+var ImageView = require('./ImageView');
 
 var API_URL = 'http://picture.ftng.net/new/listjson';
 var API_TOKEN = 'UikQCWFkyHiRyeXICMLPSzmHCeqedUpy';
@@ -73,8 +76,8 @@ componentWillMount: function() {
 
   _renderRow: function(content: object, sectionID: number, rowID: number) {
     return (
-      <TouchableHighlight  underlayColor="transparent">
-        <View>
+      <TouchableHighlight onPress={()=>this._pressRow(content)}  underlayColor="transparent">
+        <View >
           <View style={styles.row}>
             <Image style={styles.thumb} source={{uri:content.url}}/>
             <Text style={styles.text} numberOfLines={2}>
@@ -95,11 +98,21 @@ componentWillMount: function() {
     return dataBlob;
   },
 
-  _pressRow: function(rowID: number) {
-    this._pressData[rowID] = !this._pressData[rowID];
-    this.setState({dataSource: this.state.dataSource.cloneWithRows(
-      this._genRows(this._pressData)
-    )});
+  _pressRow: function(content: object) {
+    console.log("xxxx");
+    if (Platform.OS === 'ios') {
+      this.props.navigator.push({
+        title: 'title',
+        component: ImageView,
+        passProps: {content},
+      });
+    } else {
+      this.props.navigator.push({
+        title: 'title',
+        name: 'movie',
+        content: content,
+      });
+    }
   },
 });
 
