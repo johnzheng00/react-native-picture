@@ -7,25 +7,20 @@ var {
   ListView,
   TouchableHighlight,
   StyleSheet,
-  ActivityIndicatorIOS,
-  ProgressBarAndroid,
   Text,
   Platform,
   View,
 } = React;
 
 var ImageView = require('./ImageView');
-var TimerMixin = require('react-timer-mixin');
+var RefreshableListView = require('react-native-refreshable-listview')
 
 var API_URL = 'http://picture.ftng.net/new/listjson';
 var API_TOKEN = 'UikQCWFkyHiRyeXICMLPSzmHCeqedUpy';
 
-var pictures = new Array();
+var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
-var MainScreen = React.createClass({
-  mixins: [TimerMixin],
-
-  timeoutID: (null: any),
+var RefreshMainScreen = React.createClass({
 
   statics: {
     title: '<ListView> - Grid Layout',
@@ -33,19 +28,16 @@ var MainScreen = React.createClass({
   },
 
   getInitialState: function() {
-    var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
     return {
       dataSource: ds.cloneWithRows(this._genRows({})),
-      isLoading: false,
-      isLoadingTail: false,
-      pageNumber: 0,
     };
   },
 
   _pressData: ({}: {[key: number]: boolean}),
 
 componentWillMount: function() {
-    this.loadData(1);
+    this.fetchData(1);
   },
 
 
@@ -55,51 +47,15 @@ componentWillMount: function() {
       );
   },
 
-  loadData: function(pageNumber: number){
-    this.setState({
-      isLoadingTail: true,
-   });
+  fetchData: function(pageNumber: number){
+
 
     fetch("http://picture.ftng.net/new/listjson?token=UikQCWFkyHiRyeXICMLPSzmHCeqedUpy&page="+pageNumber)
     .then((response) => response.json())
       .then((responseText) => {
-        for (var i in responseText.content) {
-          pictures.push(responseText.content[i]);
-        }
-
         this.setState({
-         dataSource: this.state.dataSource.cloneWithRows(pictures),
+         dataSource: this.state.dataSource.cloneWithRows(responseText.content),
          loaded: true,
-         isLoadingTail: false,
-       });
-      })
-      .catch((error) => {
-        console.warn(error);
-      });
-
-  },
-
-  onEndReached: function(){
-
-    if (this.state.isLoadingTail) {
-          // We're already fetching or have all the elements so noop
-          return;
-    }
-    this.setState({
-      pageNumber: this.state.pageNumber + 1,
-      isLoadingTail: true,
-    });
-    var pageNumber = this.state.pageNumber;
-    fetch("http://picture.ftng.net/new/listjson?token=UikQCWFkyHiRyeXICMLPSzmHCeqedUpy&page="+pageNumber)
-    .then((response) => response.json())
-      .then((responseText) => {
-        for (var i in responseText.content) {
-          pictures.push(responseText.content[i]);
-        }
-        this.setState({
-         dataSource: this.state.dataSource.cloneWithRows(pictures),
-         loaded: true,
-         isLoadingTail: false,
        });
       })
       .catch((error) => {
@@ -112,12 +68,12 @@ componentWillMount: function() {
     return (
       // ListView wraps ScrollView and so takes on its properties.
       // With that in mind you can use the ScrollView's contentContainerStyle prop to style the items.
-      <ListView
+      <RefreshableListView
         contentContainerStyle={styles.list}
         dataSource={this.state.dataSource}
         renderRow={this._renderRow}
-        renderFooter={this.renderFooter}
-        onEndReached={this.onEndReached}
+        refreshDescription="Refreshing pictures"
+        loadData={this.fetchData(2)}
       />
     );
   },
@@ -136,21 +92,6 @@ componentWillMount: function() {
       </TouchableHighlight>
     );
   },
-
-  renderFooter: function() {
-  if (!this.state.isLoadingTail) {
-    return <View style={styles.scrollSpinner} />;
-  }
-  if (Platform.OS === 'ios') {
-    return <ActivityIndicatorIOS style={styles.scrollSpinner} />;
-  } else {
-    return (
-      <View  style={{alignItems: 'center'}}>
-        <ProgressBarAndroid styleAttr="Large"/>
-      </View>
-    );
-  }
-},
 
   _genRows: function(pressData: {[key: number]: boolean}): Array<string> {
     var dataBlob = [];
@@ -195,8 +136,8 @@ var styles = StyleSheet.create({
     height: 150,
     backgroundColor: '#F6F6F6',
     alignItems: 'center',
-    borderWidth: 0,
-    borderRadius: 0,
+    borderWidth: 1,
+    borderRadius: 5,
     borderColor: '#CCC'
   },
   thumb: {
@@ -216,9 +157,6 @@ var styles = StyleSheet.create({
     flexWrap: 'nowrap',
     textDecorationStyle: 'dotted'
   },
-  scrollSpinner: {
-    marginVertical: 20,
-  },
 });
 
-module.exports = MainScreen;
+module.exports = RefreshMainScreen;

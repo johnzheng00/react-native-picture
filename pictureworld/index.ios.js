@@ -10,10 +10,12 @@ var {
 } = React;
 
 var MainScreen = require('./MainScreen');
+var RefreshView = require('./RefreshView');
+var RefreshMainScreen = require('./RefreshMainScreen');
 
 var pictureworld = React.createClass({
   render: function() {
-    console.log("init");
+
     return (
       <NavigatorIOS
         style={styles.container}
