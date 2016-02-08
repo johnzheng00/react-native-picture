@@ -12,7 +12,7 @@ var ImageView = React.createClass({
   render: function() {
   return (
     <View style={styles.container}>
-      <Image source={{uri:this.props.content.url}} style={styles.image}/>
+      <Image resizeMode='contain' source={{uri:this.props.content.url}} style={styles.image}/>
       <Text style={styles.instructions}>
         {this.props.content.comment}
       </Text>
@@ -31,7 +31,7 @@ var styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    width: 300,
+    width:500,
     height: 400,
   },
   welcome: {
@@ -40,13 +40,13 @@ var styles = StyleSheet.create({
     margin: 10,
   },
   instructions: {
+    flex: 1,
     position:'absolute',
     color: '#ffffff',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    top: 435,
+    bottom: 0,
     left: 0,
     textAlign: 'center',
-    color: '#fff',
     marginBottom: 5,
   },
 });

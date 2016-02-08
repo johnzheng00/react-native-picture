@@ -7,6 +7,7 @@ var {
   ListView,
   TouchableHighlight,
   StyleSheet,
+  Navigator,
   ActivityIndicatorIOS,
   ProgressBarAndroid,
   Text,
@@ -14,6 +15,7 @@ var {
   View,
 } = React;
 
+//var navigator = new Navigator();
 var ImageView = require('./ImageView');
 var TimerMixin = require('react-timer-mixin');
 
@@ -27,22 +29,18 @@ var MainScreen = React.createClass({
 
   timeoutID: (null: any),
 
-  statics: {
-    title: '<ListView> - Grid Layout',
-    description: 'Flexbox grid layout.'
-  },
+
 
   getInitialState: function() {
     var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     return {
-      dataSource: ds.cloneWithRows(this._genRows({})),
+      dataSource: ds.cloneWithRows(pictures),
       isLoading: false,
       isLoadingTail: false,
       pageNumber: 0,
     };
   },
 
-  _pressData: ({}: {[key: number]: boolean}),
 
 componentWillMount: function() {
     this.loadData(1);
@@ -127,7 +125,7 @@ componentWillMount: function() {
       <TouchableHighlight onPress={()=>this._pressRow(content)}  underlayColor="transparent">
         <View >
           <View style={styles.row}>
-            <Image style={styles.thumb} source={{uri:content.url}}/>
+            <Image style={styles.thumb} source={{uri:content.s_url}}/>
             <Text style={styles.text} numberOfLines={2}>
               {content.comment}
             </Text>
@@ -152,27 +150,19 @@ componentWillMount: function() {
   }
 },
 
-  _genRows: function(pressData: {[key: number]: boolean}): Array<string> {
-    var dataBlob = [];
-    for (var ii = 0; ii < 100; ii++) {
-      var pressedText = pressData[ii] ? ' (X)' : '';
-      dataBlob.push('Cell ' + ii + pressedText);
-    }
-    return dataBlob;
-  },
 
   _pressRow: function(content: object) {
     console.log("xxxx");
     if (Platform.OS === 'ios') {
       this.props.navigator.push({
-        title: 'title',
+        title: '详细',
         component: ImageView,
         passProps: {content},
       });
     } else {
       this.props.navigator.push({
-        title: 'title',
-        name: 'movie',
+        title: '详细',
+        name: 'ImageView',
         content: content,
       });
     }

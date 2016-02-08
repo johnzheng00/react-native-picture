@@ -7,6 +7,7 @@ var {
   AppRegistry,
   NavigatorIOS,
   StyleSheet,
+  SegmentedControlIOS,
 } = React;
 
 var MainScreen = require('./MainScreen');
@@ -18,12 +19,15 @@ var pictureworld = React.createClass({
 
     return (
       <NavigatorIOS
+        translucent={true}
         style={styles.container}
         initialRoute={{
-          title: 'Movies',
+          title: '最新',
           component: MainScreen,
         }}
-      />
+      >
+      <SegmentedControlIOS values={['One', 'Two']} />
+      </NavigatorIOS>
     );
   }
 });

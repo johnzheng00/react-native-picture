@@ -5,7 +5,9 @@
 'use strict';
 import React, {
   AppRegistry,
+  BackAndroid,
   Component,
+  Navigator,
   ToolbarAndroid,
   StyleSheet,
   Text,
@@ -13,22 +15,70 @@ import React, {
 } from 'react-native';
 
 var MainScreen = require('./MainScreen');
+var ImageView = require('./ImageView');
+var _navigator;
 
-class pictureworld extends Component {
-  render() {
+BackAndroid.addEventListener('hardwareBackPress', () => {
+  if (_navigator && _navigator.getCurrentRoutes().length > 1) {
+    _navigator.pop();
+    return true;
+  }
+  return false;
+});
+
+var RouteMapper = function(route, navigationOperations, onComponentRef) {
+  _navigator = navigationOperations;
+  if (route.name==='Main') {
     return (
-      <View style={{flex: 1}}>
-      <ToolbarAndroid style={styles.toolbar}
-        actions={[]}
-        titleColor="white"
-        title="Movies" />
-      <MainScreen
-        style={{flex: 1}}
+        <View style={{flex: 1}}>
+          <ToolbarAndroid
+            actions={[]}
+            style={styles.toolbar}
+            titleColor="white"
+            title={'最新'} />
+          <MainScreen
+            style={{flex: 1}}
+            navigator={navigationOperations}
+            movie={route.movie}
+          />
+        </View>
+      );
+  }else if (route.name==='ImageView') {
+    return (
+        <View style={{flex: 1}}>
+          <ToolbarAndroid
+            actions={[]}
+            style={styles.toolbar}
+            titleColor="white"
+            title={'详细'} />
+          <ImageView
+            style={{flex: 1}}
+            navigator={navigationOperations}
+            content={route.content}
+          />
+        </View>
+      );
+  }
+
+
+};
+
+var pictureworld = React.createClass({
+  render: function() {
+    var initialRoute = {name: 'Main'};
+    return (
+      <Navigator
+        style={styles.container}
+        initialRoute={initialRoute}
+        configureScene={() => Navigator.SceneConfigs.FadeAndroid}
+        renderScene={RouteMapper}
       />
-    </View>
     );
   }
-}
+});
+
+
+
 
 const styles = StyleSheet.create({
   container: {
