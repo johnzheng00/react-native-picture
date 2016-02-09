@@ -12,7 +12,6 @@ var {
 
 var MainScreen = require('./MainScreen');
 var RefreshView = require('./RefreshView');
-var RefreshMainScreen = require('./RefreshMainScreen');
 
 var pictureworld = React.createClass({
   render: function() {
@@ -26,8 +25,7 @@ var pictureworld = React.createClass({
           component: MainScreen,
         }}
       >
-      <SegmentedControlIOS values={['One', 'Two']} />
-      </NavigatorIOS>
+    </NavigatorIOS>
     );
   }
 });
