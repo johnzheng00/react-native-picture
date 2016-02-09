@@ -11,7 +11,6 @@ var {
 } = React;
 
 var MainScreen = require('./MainScreen');
-var RefreshView = require('./RefreshView');
 
 var pictureworld = React.createClass({
   render: function() {
