@@ -22,7 +22,7 @@ var TimerMixin = require('react-timer-mixin');
 var API_URL = 'http://picture.ftng.net/new/listjson';
 var API_TOKEN = 'UikQCWFkyHiRyeXICMLPSzmHCeqedUpy';
 
-var pictures = new Array();
+var pictures = new Array(10);
 
 var MainScreen = React.createClass({
   mixins: [TimerMixin],
@@ -61,9 +61,10 @@ componentWillMount: function() {
     fetch("http://picture.ftng.net/new/listjson?token=UikQCWFkyHiRyeXICMLPSzmHCeqedUpy&page="+pageNumber)
     .then((response) => response.json())
       .then((responseText) => {
-        for (var i in responseText.content) {
-          pictures.push(responseText.content[i]);
-        }
+        pictures = responseText.content;
+        // for (var i in responseText.content) {
+        //   pictures.push(responseText.content[i]);
+        // }
 
         this.setState({
          dataSource: this.state.dataSource.cloneWithRows(pictures),
