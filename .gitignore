@@ -2,5 +2,6 @@ node_modules/
 pictureworld/node_modules/
 pictureworld/android/build
 pictureworld/ios/
+pictureworld/android/
 build/
 pictureworld/android/app/build
